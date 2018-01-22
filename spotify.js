@@ -10,11 +10,14 @@ var keys = require("./keys.js");
 var spotify = new spotifyRequest(keys.spotify);
 var nodeArgs = process.argv;
 
+
+function searchSong() {
+
 var newSong = ""
 
-for (var i = 2; i < nodeArgs.length; i++) {
+for (var i = 3; i < nodeArgs.length; i++) {
 
-  if (i > 2 && i < nodeArgs.length) {
+  if (i > 3 && i < nodeArgs.length) {
 
     newSong = newSong + "+" + nodeArgs[i];
 
@@ -31,12 +34,23 @@ spotify.search({ type: 'track', query: newSong, limit: 10 }, function(err, data)
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-    console.log(data);
+ 
+      var songInfo = "Artist: " + data.tracks.items[0].artists[0].name + 
+      "\nSong Name: " + data.tracks.items[0].name +
+      "\nPreview Link: " + data.tracks.items[0].preview_url +
+      "\nAlbum: " + data.tracks.items[0].album.name +
+      "\n----------";
 
-    //var songInfo = "Title: " + info.Title + "\nArtist: " + info.artist +
-    //"\nAlbum: " + info.album + "\nPreviewlink: " + info.Previewlink +
-    //"\n----------";
+      console.log(songInfo);
+      });
+};
 
-    //console.log(songInfo);
-  });
+if(nodeArgs[2] == "spotify-this-song") {
+	searchSong();
+}
+else {
+	console.log("NO!");
+}
 
+
+ 
