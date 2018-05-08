@@ -1,23 +1,30 @@
-//node packages
+// DEPENDENCIES
+// =====================================
+// Read and set environment variables
 
 require("dotenv").config();
+
+// Import the node-spotify-api NPM package.
 var spotifyRequest = require('node-spotify-api');
+
+// Import the request npm package
 var request = require("request");
+
 var spotify = require('spotify');
+
 var inquirer = require('inquirer');
+
+// Import the Twitter NPM package.
 var Twitter = require("twitter");
+
+// Import the FS package for read/write.
 var fs = require("fs");
+
+// Import the API keys
 var keys = require("./keys.js");
+
+// Initialize the spotify API client using our client id and secret
 var spotify = new spotifyRequest(keys.spotify);
-
-
- var client = new Twitter({
-  consumer_key: 'W2atbmM34l9wjlU3AaEijcPQH',
-  consumer_secret: '1ias3F5CMNqieJQxLiItPjVdxdWQcIe378W45FE4y8VkTyOqhp',
-  access_token_key: '953091860133826561-8i7IdgZsR3a8jrOmoWhO0ZIySIjn5Sk',
-  access_token_secret: 'LOuiBS0Sfiht7GyZbzQWOsnFZlIX20rN9Wlrh4NNGPfiV'
-});
-
 
 // Stores all of the arguments in an array
 var nodeArgs = process.argv;
@@ -75,25 +82,22 @@ request(queryUrl, function(error, response) {
 
 function runTwitter() {
 
+ var client = new Twitter(keys.twitter);
  var params = {q: 'Rickibobbi23'};
-  client.get('search/tweets', params, function(error, tweets, response) {
-    if(error){
-      console.log(error);
+
+  client.get("statuses/user_timeline", params, function(error, tweets, response) {
+    if (!error) {
+      for (var i = 0; i < tweets.length; i++) {
+        console.log(tweets[i].created_at);
+        console.log("");
+        console.log(tweets[i].text);
+      }
     }
-    else {
-
-    }
-// going through tweets
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      console.log(tweets.statuses[i].text)
-    }
-
- });
-
-}
+  });
+};
 
 
-/////Song Function Below/////
+//Function for running a Spotify search
 
 
 function searchSong() {
@@ -130,7 +134,7 @@ spotify.search({ type: 'track', query: newSong, limit: 10 }, function(err, data)
       });
 };
 
-
+// Arguements entered into command line that pick which function to run
  if(nodeArgs[2] == "movie-this") {
   createMovie();
 }
